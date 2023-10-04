@@ -4,7 +4,7 @@ on: push
 
 env:
   BINARY_NAME: example
-  GO_VERSION: 1.20.6
+  GO_VERSION: 1.21
 
 jobs:
   build:
@@ -44,14 +44,7 @@ jobs:
         with:
           name: ${{ env.BINARY_NAME }}-binaries
           path: build/
-      - name: Uploaded binaries as release assets
-        run: |
-          set -x
-          tag_name="${GITHUB_REF##*/}"
-          assets=()
-          for binary in ./build/*; do
-            assets+=("-a" "${binary}")
-          done
-          hub release edit "${assets[@]}" -m "$tag_name" "$tag_name"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "build/*"
