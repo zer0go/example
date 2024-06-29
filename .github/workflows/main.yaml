@@ -4,7 +4,7 @@ on: push
 
 env:
   BINARY_NAME: example
-  GO_VERSION: 1.21
+  GO_VERSION: 1.22
 
 jobs:
   build:
@@ -13,11 +13,11 @@ jobs:
       CGO_ENABLED: 0
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Install dependencies
@@ -27,7 +27,7 @@ jobs:
       - name: Run build
         run: make build-all
       - name: Create artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.BINARY_NAME }}-binaries
           path: build/
@@ -38,13 +38,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download binaries artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.BINARY_NAME }}-binaries
           path: build/
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: "build/*"
